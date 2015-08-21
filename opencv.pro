@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       +=sql core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -17,7 +17,8 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    videotest.ui
 
 INCLUDEPATH+=D:\yzbx_allthing\build\install\include\
             D:\yzbx_allthing\build\install\include\opencv2\

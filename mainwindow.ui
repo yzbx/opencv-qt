@@ -6,29 +6,192 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>768</width>
+    <height>357</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralWidget"/>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>371</width>
+      <height>281</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>可执行文件</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_5">
+         <property name="text">
+          <string>浏览</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton">
+       <property name="text">
+        <string>提取前景</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>原文件目录</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_2"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_4">
+         <property name="text">
+          <string>浏览</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_2">
+       <property name="text">
+        <string>更改文件名</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <item>
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>可执行文件</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_4"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_6">
+         <property name="text">
+          <string>浏览</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>参数</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_3"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_3">
+         <property name="text">
+          <string>浏览</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_7">
+       <property name="text">
+        <string>跟踪目标</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>30</y>
+      <width>331</width>
+      <height>261</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+  </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>400</width>
+     <width>768</width>
      <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuOpencv_test">
     <property name="title">
-     <string>opencv test</string>
+     <string>test</string>
     </property>
     <addaction name="actionRun"/>
+    <addaction name="actionTestsplite"/>
+    <addaction name="actionTestvideo"/>
+    <addaction name="actionTestvideoinfo"/>
    </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>file</string>
+    </property>
+    <addaction name="actionSaveKeyFrame"/>
+    <addaction name="actionSaveFrame"/>
+   </widget>
+   <addaction name="menuHelp"/>
    <addaction name="menuOpencv_test"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -42,7 +205,32 @@
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionRun">
    <property name="text">
-    <string>run</string>
+    <string>testopencv</string>
+   </property>
+  </action>
+  <action name="actionTestsplite">
+   <property name="text">
+    <string>testsplite</string>
+   </property>
+  </action>
+  <action name="actionTestvideo">
+   <property name="text">
+    <string>testvideo</string>
+   </property>
+  </action>
+  <action name="actionSaveKeyFrame">
+   <property name="text">
+    <string>saveKeyFrame</string>
+   </property>
+  </action>
+  <action name="actionSaveFrame">
+   <property name="text">
+    <string>saveFrame</string>
+   </property>
+  </action>
+  <action name="actionTestvideoinfo">
+   <property name="text">
+    <string>testvideoinfo</string>
    </property>
   </action>
  </widget>
