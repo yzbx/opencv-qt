@@ -1,0 +1,4 @@
+*.user*
+*build-*
+*~
+linux/src/objectTracking/extern/bgslibrary
