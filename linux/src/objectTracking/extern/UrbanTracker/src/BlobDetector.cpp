@@ -2,7 +2,7 @@
 #include "Logger.h"
 #include "StringHelpers.h"
 #include "BGSFactory.h"
-//#include "PlaybackBGS.h"
+#include "PlaybackBGS.h"
 #include <string>
 #include <opencv2/opencv.hpp>
 #include <algorithm>
@@ -25,17 +25,17 @@ BlobDetector::BlobDetector(ApplicationContext* appContext, const std::string& bg
 //    else if(mBackgroundSubstractor->getNbChannel() == 3 && mMask.channels() == 1)
 //        cv::cvtColor(mMask, mMask, CV_GRAY2BGR);
     if(mMask.channels()==1) cv::cvtColor(mMask, mMask, CV_GRAY2BGR);
-//	if(mReplayBGS)
-//	{
-//		PlaybackBGS* bgs = dynamic_cast<PlaybackBGS*>(mBackgroundSubstractor);
-//		if(bgs)
-//		{
-//			int pos = appContext->getTimestamp();
-//			bgs->setCurrentFrameNumber(pos);
-//		}
-//		else
-//			LOGASSERT(false, "PlaybackBGS should have PlaybackBGS type...");
-//	}
+    if(mReplayBGS)
+    {
+        PlaybackBGS* bgs = dynamic_cast<PlaybackBGS*>(mBackgroundSubstractor);
+        if(bgs)
+        {
+            int pos = appContext->getTimestamp();
+            bgs->setCurrentFrameNumber(pos);
+        }
+        else
+            LOGASSERT(false, "PlaybackBGS should have PlaybackBGS type...");
+    }
 }
 
 

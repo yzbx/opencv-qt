@@ -24,7 +24,8 @@ TrackingApp/bin/TrackingApp xxx/main.cfg
 ## bug
 - error in parse xxx.cfg, add one line may crash.
 - may not support for Chinese path, but support Chinese file.
-
+- /home/yzbx/git/opencv-qt/linux/src/objectTracking/extern/UrbanTracker/src/PlaybackBGS.cpp:16:17: error: ‘setfill’ is not a member of ‘std’
+add #include <iomanip>
 ---
 
 # BGS
@@ -58,6 +59,17 @@ QMAKE_CXXFLAGS = "-g -ftest-coverage -fprofile-arcs -msse -msse2 -msse3 -march=n
 ```
 4. remove PlaybackBGS
 5. update for bgslibray in UrbanTracker, such as LOBSTER
+6. cannot find sqlite, we need change the library order;
+```
+LIBS += \
+    -lUrbanTrackerLib \
+    -lexternal \
+    -lboost_system \
+    -lboost_program_options \
+    -lboost_filesystem \
+```
+7. QSettings cannot deal with Chinese in ini file correctly, so I use json instead, but QtJson also work bad, I use qt-json in github instead.
+8. for QSettings not good for ini, I use boost instead
 
 # reference
 - [motion tracking](www.stats.ox.ac.uk/~wauthier/tracker)

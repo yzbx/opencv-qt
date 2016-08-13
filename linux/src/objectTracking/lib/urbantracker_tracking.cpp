@@ -1,5 +1,5 @@
-#include "trackingtest.h"
-#include "ui_trackingtest.h"
+#include "urbantracker_tracking.h"
+
 InputFrameProviderIface* LoadVideo(po::variables_map& vm, bool& overrideTotalNbFrame, unsigned int& lastFrame)
 {
     InputFrameProviderIface* vfm = nullptr;
@@ -94,7 +94,7 @@ BlobTrackerAlgorithmParams LoadTrackerParams(po::variables_map& vm)
 }
 
 
-int mainTest(int argNumber, char* argString[])
+int mainTest(int argNumber,char* argString[])
 {
     //Init Logger
     Logger::getInstance()->setLoggingLevel(eINFO);
@@ -479,21 +479,88 @@ string getParameterDescription(po::options_description& options, const po::varia
     return stream.str();
 }
 
-
-TrackingTest::TrackingTest(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::TrackingTest)
+urbanTracker_tracking::urbanTracker_tracking()
 {
-    ui->setupUi(this);
+
 }
 
-TrackingTest::~TrackingTest()
+void urbanTracker_tracking::process(QString configFile,QString videoFile, QString bgsType)
 {
-    delete ui;
-}
+    qDebug()<<"configFile="<<configFile;
+    qDebug()<<videoFile;
+    qDebug()<<bgsType;
 
-void TrackingTest::on_pushButton_tracking_clicked()
-{
+    QFileInfo info(videoFile);
+    if(!info.exists()||!info.isFile()){
+        qDebug()<<"empty file or not file "<<videoFile;
+        exit(-1);
+    }
+    QString sqlFile=info.baseName()+".sqlite";
+
+    info.setFile(configFile);
+    if(!info.exists()||!info.isFile()){
+        qDebug()<<"empty file or not file "<<configFile;
+        exit(-1);
+    }
+
+
+    QSettings *sett=new QSettings(configFile,QSettings::IniFormat);
+    QString maincfg=sett->value("UrbanTracker/configFilePath").toString();
+    maincfg=getAbsFilePath(configFile,maincfg);
+    QString outputPath=sett->value("defaultOutputPath").toString();
+    outputPath=getAbsFilePath(configFile,outputPath);
+    sqlFile=getAbsFilePath(outputPath,sqlFile);
+
+
+    info.setFile(maincfg);
+    if(!info.exists()||!info.isFile()){
+        qDebug()<<"empty file or not file "<<maincfg;
+        exit(-1);
+    }
+    QSettings mainsett(maincfg,QSettings::IniFormat);
+    qDebug()<<"maincfg keys: "<<mainsett.allKeys();
+    QString filecfg=mainsett.value("filepath-filename").toString();
+    QString algocfg=mainsett.value("tracker-filename").toString();
+    filecfg=getAbsFilePath(maincfg,filecfg);
+    algocfg=getAbsFilePath(maincfg,algocfg);
+
+    QSettings filesett(filecfg,QSettings::IniFormat);
+    QSettings algosett(algocfg,QSettings::IniFormat);
+
+    filesett.setValue("video-filename",videoFile);
+    filesett.setValue("mask-filename",QString("none"));
+    filesett.setValue("object-sqlite-filename",sqlFile);
+    algosett.setValue("bgs-type",bgsType);
+
+    filesett.sync();
+    algosett.sync();
+
     char *argString[]={"./TrackingTest","/home/yzbx/git/opencv-qt/linux/config/UrbanTracker/main.cfg"};
+    char **p;
+    p=argString;
+    p[1]=(char *)maincfg.toStdString().c_str();
     mainTest(2,argString);
+}
+
+QString urbanTracker_tracking::getAbsFilePath(QString base, QString fileName)
+{
+    QFileInfo pinfo(base);
+    QString currentPath=pinfo.absolutePath();
+
+
+    QFileInfo info(fileName);
+    if(info.isAbsolute()){
+        return fileName;
+    }
+    else{
+        if(info.isDir()){
+            QDir dir(currentPath);
+            dir.cd(fileName);
+            return dir.absolutePath();
+        }
+        else{
+            QDir dir(currentPath);
+            return dir.absoluteFilePath(fileName);
+        }
+    }
 }

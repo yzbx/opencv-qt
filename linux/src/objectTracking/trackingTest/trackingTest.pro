@@ -63,7 +63,7 @@ SOURCES += main.cpp\
     ../extern/UrbanTracker/external/sqlite/src/sqlite3.c \
     ../extern/UrbanTracker/src/BGSFactory.cpp \
     ../extern/UrbanTracker/src/PBAS.cpp \
-#    ../extern/UrbanTracker/src/PlaybackBGS.cpp
+    ../extern/UrbanTracker/src/PlaybackBGS.cpp
 
 HEADERS  += trackingtest.h \
     ../extern/UrbanTracker/external/brisk/include/agast/agast5_8.h \
@@ -115,7 +115,7 @@ HEADERS  += trackingtest.h \
     ../extern/UrbanTracker/include/TrackerPersistance.h \
     ../extern/UrbanTracker/include/BGSFactory.h \
     ../extern/UrbanTracker/include/PBAS.h \
-#    ../extern/UrbanTracker/include/PlaybackBGS.h \
+    ../extern/UrbanTracker/include/PlaybackBGS.h \
     ../extern/UrbanTracker/include/IBGSStatic.h
 
 INCLUDEPATH +=../extern/UrbanTracker/include \

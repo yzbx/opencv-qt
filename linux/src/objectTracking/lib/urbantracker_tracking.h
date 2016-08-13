@@ -1,7 +1,6 @@
-#ifndef TRACKINGTEST_H
-#define TRACKINGTEST_H
+#ifndef URBANTRACKER_TRACKING_H
+#define URBANTRACKER_TRACKING_H
 
-#include <QMainWindow>
 #include "ApplicationContext.h"
 #include "BlobTrackerAlgorithmParams.h"
 #include "DrawableTimer.h"
@@ -27,6 +26,7 @@
 #include "IBGS.h"
 #include "PlaybackBGS.h"
 #include <boost/exception/all.hpp>
+#include "tracking_yzbx.h"
 
 using namespace cv;
 namespace po = boost::program_options;
@@ -44,24 +44,12 @@ po::variables_map LoadConfigurationSettings(int argNumber, char* argsString[], p
 
 BlobTrackerAlgorithmParams LoadTrackerParams(po::variables_map& vm);
 
-
-namespace Ui {
-class TrackingTest;
-}
-
-class TrackingTest : public QMainWindow
+class urbanTracker_tracking : public Tracking_yzbx
 {
-    Q_OBJECT
-
 public:
-    explicit TrackingTest(QWidget *parent = 0);
-    ~TrackingTest();
-
-private slots:
-    void on_pushButton_tracking_clicked();
-
-private:
-    Ui::TrackingTest *ui;
+    urbanTracker_tracking();
+    void process(QString configFile,QString videoFile,QString bgsType="default");
+    QString getAbsFilePath(QString base, QString fileName);
 };
 
-#endif // TRACKINGTEST_H
+#endif // URBANTRACKER_TRACKING_H

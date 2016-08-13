@@ -4,6 +4,7 @@
 #include "IBGS.h"
 #include <string>
 #include <opencv2/opencv.hpp>
+#include <iomanip>
 
 
 class PlaybackBGS : public IBGS

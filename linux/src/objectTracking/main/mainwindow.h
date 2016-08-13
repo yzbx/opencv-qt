@@ -5,6 +5,11 @@
 #include <QtCore>
 #include <QFileDialog>
 #include "../lib/bgsfactory_yzbx.h"
+#include "../extern/qt-json/json.h"
+#include "../lib/trackingfactory_yzbx.h"
+
+//using QtJson::JsonObject;
+//using QtJson::JsonArray;
 
 namespace Ui {
 class MainWindow;
@@ -25,8 +30,16 @@ private slots:
 
     void on_pushButton_bgs_clicked();
 
+    void on_pushButton_tracking_clicked();
+
 private:
     Ui::MainWindow *ui;
+    void loadJson(QString filepath);
+    void loadIni(QString filepath);
+    QString absoluteFilePath(QString currentPathOrFile, QString fileName);
+    QString absolutePath(QString currentPathOrFile, QString path);
+    QStringList videosList;
+    QString baseVideoPath;
 };
 
 #endif // MAINWINDOW_H

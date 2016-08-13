@@ -55,7 +55,7 @@
 
 #include "WeightedMovingMeanBGS.h"
 #include "WeightedMovingVarianceBGS.h"
-//#include "PlaybackBGS.h"
+#include "PlaybackBGS.h"
 #include <sstream>
 BGSFactory::BGSFactory()
 {
@@ -98,8 +98,7 @@ BGSFactory::BGSFactory()
 	nameToInstanceMap["WeightedMovingMeanBGS"]			= &createInstance<WeightedMovingMeanBGS>;
 	nameToInstanceMap["WeightedMovingVarianceBGS"]		= &createInstance<WeightedMovingVarianceBGS>;
     nameToInstanceMap["default"]                        = &createInstance<FrameDifferenceBGS>;
-
-//	nameToInstanceMap["PlaybackBGS"]		= &createInstance<PlaybackBGS>;
+//    nameToInstanceMap["PlaybackBGS"]                    = &createInstance<PlaybackBGS>;
 }
 
 BGSFactory::~BGSFactory()
