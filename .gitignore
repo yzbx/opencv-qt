@@ -3,3 +3,4 @@
 *~
 linux/src/objectTracking/extern/bgslibrary
 linux/src/objectTracking/extern/UrbanTracker/build/
+*.sqlite

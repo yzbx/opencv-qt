@@ -504,7 +504,7 @@ void urbanTracker_tracking::process(QString configFile,QString videoFile, QStrin
         qDebug()<<"empty file or not file "<<configFile;
         exit(-1);
     }
-    boost::property_tree::ptree pt,mainpt,filept;
+    boost::property_tree::ptree pt,mainpt,filept,algopt;
     boost::property_tree::ini_parser::read_ini(configFile.toStdString(),pt);
 
     QString maincfg=QString::fromStdString(pt.get<std::string>("UrbanTracker.configFilePath"));
@@ -531,17 +531,17 @@ void urbanTracker_tracking::process(QString configFile,QString videoFile, QStrin
     qDebug()<<"algocfg="<<algocfg;
 
     boost::property_tree::ini_parser::read_ini(filecfg.toStdString(),filept);
-//    boost::property_tree::ini_parser::read_ini(algocfg.toStdString(),algopt);
-    QSettings algoSett(algocfg,QSettings::IniFormat);
+    boost::property_tree::ini_parser::read_ini(algocfg.toStdString(),algopt);
+//    QSettings algoSett(algocfg,QSettings::IniFormat);
     filept.put("video-filename",videoFile.toStdString());
     filept.put("mask-filename","none");
     filept.put("object-sqlite-filename",sqlFile.toStdString());
-//    algopt.put("bgs-type",bgsType.toStdString());
-    algoSett.setValue("bgs-type",bgsType);
+    algopt.put("bgs-type",bgsType.toStdString());
+//    algoSett.setValue("bgs-type",bgsType);
 
     boost::property_tree::ini_parser::write_ini(filecfg.toStdString(),filept);
-//    boost::property_tree::ini_parser::write_ini(algocfg.toStdString(),algopt);
-    algoSett.sync();
+    boost::property_tree::ini_parser::write_ini(algocfg.toStdString(),algopt);
+//    algoSett.sync();
 
     char *argString[]={"./TrackingTest","/home/yzbx/git/opencv-qt/linux/config/UrbanTracker/main.cfg"};
     char **p;
