@@ -117,8 +117,8 @@ void MainWindow::loadJson(QString filepath)
 //    }
 //    qDebug()<<"default="<<result["defaultOutputPath"].toString();
 
-    baseVideoPath=result["input videos path"].toString();
-    baseVideoPath=absolutePath(filepath,baseVideoPath);
+    globalVideoPath=result["input videos path"].toString();
+    globalVideoPath=absolutePath(filepath,globalVideoPath);
 
 //    QJsonDocument doc=QJsonDocument::fromJson(filedata.toUtf8());
 //    qDebug()<<"doc="<<doc;
@@ -135,20 +135,28 @@ void MainWindow::loadJson(QString filepath)
 
 void MainWindow::loadIni(QString filepath)
 {
-    QSettings settings(filepath,QSettings::IniFormat);
-    QString ut_configFilePath=settings.value("UrbanTracker/configFilePath").toString();
-    qDebug()<<"abs test 1"<<absoluteFilePath(filepath,ut_configFilePath);
+//    QSettings settings(filepath,QSettings::IniFormat);
+    boost::property_tree::ptree pt;
+    boost::property_tree::ini_parser::read_ini(filepath.toStdString(),pt);
+//    QString ut_configFilePath=settings.value("UrbanTracker/configFilePath").toString();
+//    qDebug()<<"abs test 1"<<absoluteFilePath(filepath,ut_configFilePath);
 
-    QString defaultOutputPath=settings.value("defaultOutputPath").toString();
-    QString inputVideosTxt=settings.value("inputVideosListTxt").toString();
-    QString jsonFile=settings.value("ChineseConfigFile").toString();
+//    QString defaultOutputPath=settings.value("defaultOutputPath").toString();
+//    QString inputVideosTxt=settings.value("inputVideosListTxt").toString();
+//    QString jsonFile=settings.value("ChineseConfigFile").toString();
+    QString defaultOutputPath=QString::fromStdString(pt.get<std::string>("defaultOutputPath"));
+    QString inputVideosTxt=QString::fromStdString(pt.get<std::string>("inputVideosListTxt"));
+    QString videosPath=QString::fromStdString(pt.get<std::string>("videosPath"));
     qDebug()<<"abs test 2"<<absoluteFilePath(filepath,defaultOutputPath);
     defaultOutputPath=absolutePath(filepath,defaultOutputPath);
     qDebug()<<"abs test 3"<<defaultOutputPath;
+    qDebug()<<"boost test"<<videosPath;
 
     inputVideosTxt=absoluteFilePath(filepath,inputVideosTxt);
-    jsonFile=absoluteFilePath(filepath,jsonFile);
-    loadJson(jsonFile);
+    videosPath=absoluteFilePath(filepath,videosPath);
+    globalVideoPath=videosPath;
+//    jsonFile=absoluteFilePath(filepath,jsonFile);
+//    loadJson(jsonFile);
 
     QString filedata;
     QFile file;
@@ -162,15 +170,17 @@ void MainWindow::loadIni(QString filepath)
         file.close();
     }
     QStringList inputVideoList=filedata.split("\n");
-    videosList=inputVideoList;
+    globalVideosList=inputVideoList;
 
     QString text=ui->lineEdit_outputPath->text();
     if(text.isEmpty()){
         ui->lineEdit_outputPath->setText(defaultOutputPath);
     }
     else{
-        settings.setValue("defaultOutputPath",ui->lineEdit_outputPath->text());
-        settings.sync();
+        pt.put("defaultOutputPath",ui->lineEdit_outputPath->text().toStdString());
+        boost::property_tree::ini_parser::write_ini(filepath.toStdString(),pt);
+//        settings.setValue("defaultOutputPath",ui->lineEdit_outputPath->text());
+//        settings.sync();
     }
 }
 
@@ -222,15 +232,15 @@ void MainWindow::on_pushButton_tracking_clicked()
     trackingFactory_yzbx trackerFac;
     Tracking_yzbx *tracker=trackerFac.getTrackingAlgorithm(trackType);
 
-    int n=videosList.length();
+    int n=globalVideosList.length();
     QSettings sett(configFile,QSettings::IniFormat);
     QString outputPath=sett.value("defaultOutputPath").toString();
     QFileInfo info;
     for(int i=0;i<n;i++){
-        QString videoFile=videosList.at(i);
+        QString videoFile=globalVideosList.at(i);
         info.setFile(videoFile);
         if(!info.isAbsolute()){
-            QDir dir(baseVideoPath);
+            QDir dir(globalVideoPath);
             videoFile=dir.absoluteFilePath(videoFile);
             info.setFile(videoFile);
         }

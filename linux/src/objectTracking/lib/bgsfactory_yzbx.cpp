@@ -247,7 +247,7 @@ IBGS *bgsFactory_yzbx::getBgsAlgorithm(QString bgstype)
 QStringList bgsFactory_yzbx::getBgsTypeList()
 {
     QStringList list;
-    list<<"default"<<"FrameDifferenceBGS"<<"StaticFrameDifferenceBGS"<<"WeightedMovingMeanBGS"<<"WeightedMovingVarianceBGS"<<"MixtureOfGaussianV1BGS"<<"MixtureOfGaussianV2BGS"<<"AdaptiveBackgroundLearning"<<"DPAdaptiveMedianBGS"<<"DPGrimsonGMMBGS"<<"DPZivkovicAGMMBGS"<<"DPMeanBGS"<<"DPWrenGABGS"<<"DPPratiMediodBGS"<<"DPEigenbackgroundBGS"<<"DPTextureBGS"<<"T2FGMM_UM"<<"T2FGMM_UV"<<"T2FMRF_UM"<<"T2FMRF_UV"<<"FuzzySugenoIntegral"<<"FuzzyChoquetIntegral"<<"LBSimpleGaussian"<<"LBFuzzyGaussian"<<"LBMixtureOfGaussians"<<"LBAdaptiveSOM"<<"LBFuzzyAdaptiveSOM"<<"LbpMrf"<<"MultiLayerBGS"<<"VuMeter"<<"KDE"<<"IndependentMultimodalBGS"<<"SJN_MultiCueBGS"<<"SigmaDeltaBGS"<<"SuBSENSEBGS"<<"LOBSTERBGS";
+    list<<"FrameDifferenceBGS"<<"StaticFrameDifferenceBGS"<<"WeightedMovingMeanBGS"<<"WeightedMovingVarianceBGS"<<"MixtureOfGaussianV1BGS"<<"MixtureOfGaussianV2BGS"<<"AdaptiveBackgroundLearning"<<"DPAdaptiveMedianBGS"<<"DPGrimsonGMMBGS"<<"DPZivkovicAGMMBGS"<<"DPMeanBGS"<<"DPWrenGABGS"<<"DPPratiMediodBGS"<<"DPEigenbackgroundBGS"<<"DPTextureBGS"<<"T2FGMM_UM"<<"T2FGMM_UV"<<"T2FMRF_UM"<<"T2FMRF_UV"<<"FuzzySugenoIntegral"<<"FuzzyChoquetIntegral"<<"LBSimpleGaussian"<<"LBFuzzyGaussian"<<"LBMixtureOfGaussians"<<"LBAdaptiveSOM"<<"LBFuzzyAdaptiveSOM"<<"LbpMrf"<<"MultiLayerBGS"<<"VuMeter"<<"KDE"<<"IndependentMultimodalBGS"<<"SJN_MultiCueBGS"<<"SigmaDeltaBGS"<<"SuBSENSEBGS"<<"LOBSTERBGS";
 #if CV_MAJOR_VERSION >= 2 && CV_MINOR_VERSION >= 4 && CV_SUBMINOR_VERSION >= 3
     list<<"GMG";
 #endif

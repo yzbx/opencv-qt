@@ -27,6 +27,8 @@
 #include "PlaybackBGS.h"
 #include <boost/exception/all.hpp>
 #include "tracking_yzbx.h"
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/ini_parser.hpp>
 
 using namespace cv;
 namespace po = boost::program_options;

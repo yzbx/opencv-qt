@@ -7,6 +7,8 @@
 #include "../lib/bgsfactory_yzbx.h"
 #include "../extern/qt-json/json.h"
 #include "../lib/trackingfactory_yzbx.h"
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/ini_parser.hpp>
 
 //using QtJson::JsonObject;
 //using QtJson::JsonArray;
@@ -38,8 +40,8 @@ private:
     void loadIni(QString filepath);
     QString absoluteFilePath(QString currentPathOrFile, QString fileName);
     QString absolutePath(QString currentPathOrFile, QString path);
-    QStringList videosList;
-    QString baseVideoPath;
+    QStringList globalVideosList;
+    QString globalVideoPath;
 };
 
 #endif // MAINWINDOW_H

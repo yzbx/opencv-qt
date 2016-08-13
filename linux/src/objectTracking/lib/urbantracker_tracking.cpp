@@ -96,6 +96,8 @@ BlobTrackerAlgorithmParams LoadTrackerParams(po::variables_map& vm)
 
 int mainTest(int argNumber,char* argString[])
 {
+    std::cout<<"argString is: "<<argString[0]<<" "<<argString[1]<<std::endl;
+    printf("address is: %p %p",argString[0],argString[1]);
     //Init Logger
     Logger::getInstance()->setLoggingLevel(eINFO);
 
@@ -502,43 +504,49 @@ void urbanTracker_tracking::process(QString configFile,QString videoFile, QStrin
         qDebug()<<"empty file or not file "<<configFile;
         exit(-1);
     }
+    boost::property_tree::ptree pt,mainpt,filept,algopt;
+    boost::property_tree::ini_parser::read_ini(configFile.toStdString(),pt);
 
-
-    QSettings *sett=new QSettings(configFile,QSettings::IniFormat);
-    QString maincfg=sett->value("UrbanTracker/configFilePath").toString();
+    QString maincfg=QString::fromStdString(pt.get<std::string>("UrbanTracker.configFilePath"));
     maincfg=getAbsFilePath(configFile,maincfg);
-    QString outputPath=sett->value("defaultOutputPath").toString();
+    QString outputPath=QString::fromStdString(pt.get<std::string>("defaultOutputPath"));
     outputPath=getAbsFilePath(configFile,outputPath);
     sqlFile=getAbsFilePath(outputPath,sqlFile);
-
+    qDebug()<<"maincfg="<<maincfg;
+    qDebug()<<"outputPath="<<outputPath;
 
     info.setFile(maincfg);
     if(!info.exists()||!info.isFile()){
         qDebug()<<"empty file or not file "<<maincfg;
         exit(-1);
     }
-    QSettings mainsett(maincfg,QSettings::IniFormat);
-    qDebug()<<"maincfg keys: "<<mainsett.allKeys();
-    QString filecfg=mainsett.value("filepath-filename").toString();
-    QString algocfg=mainsett.value("tracker-filename").toString();
+    boost::property_tree::ini_parser::read_ini(maincfg.toStdString(),mainpt);
+    QString filecfg=QString::fromStdString(mainpt.get<std::string>("filepath-filename"));
+    QString algocfg=QString::fromStdString(mainpt.get<std::string>("tracker-filename"));
+
     filecfg=getAbsFilePath(maincfg,filecfg);
     algocfg=getAbsFilePath(maincfg,algocfg);
 
-    QSettings filesett(filecfg,QSettings::IniFormat);
-    QSettings algosett(algocfg,QSettings::IniFormat);
+    qDebug()<<"filecfg="<<filecfg;
+    qDebug()<<"algocfg="<<algocfg;
 
-    filesett.setValue("video-filename",videoFile);
-    filesett.setValue("mask-filename",QString("none"));
-    filesett.setValue("object-sqlite-filename",sqlFile);
-    algosett.setValue("bgs-type",bgsType);
+    boost::property_tree::ini_parser::read_ini(filecfg.toStdString(),filept);
+    boost::property_tree::ini_parser::read_ini(algocfg.toStdString(),algopt);
+    filept.put("video-filename",videoFile.toStdString());
+    filept.put("mask-filename","none");
+    filept.put("object-sqlite-filename",sqlFile.toStdString());
+    algopt.put("bgs-type",bgsType.toStdString());
 
-    filesett.sync();
-    algosett.sync();
+    boost::property_tree::ini_parser::write_ini(filecfg.toStdString(),filept);
+    boost::property_tree::ini_parser::write_ini(algocfg.toStdString(),algopt);
 
     char *argString[]={"./TrackingTest","/home/yzbx/git/opencv-qt/linux/config/UrbanTracker/main.cfg"};
     char **p;
     p=argString;
-    p[1]=(char *)maincfg.toStdString().c_str();
+    std::string str=maincfg.toStdString();
+    p[1]=(char *)str.c_str();
+    std::cout<<p[0]<<" "<<p[1]<<std::endl;
+    printf("%p %p",argString[0],argString[1]);
     mainTest(2,argString);
 }
 
