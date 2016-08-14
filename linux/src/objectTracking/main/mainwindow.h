@@ -10,8 +10,6 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/ini_parser.hpp>
 
-//using QtJson::JsonObject;
-//using QtJson::JsonArray;
 
 namespace Ui {
 class MainWindow;
@@ -28,20 +26,16 @@ public:
 private slots:
     void on_pushButton_inputPath_clicked();
 
-    void on_pushButton_outputPath_clicked();
-
     void on_pushButton_bgs_clicked();
 
     void on_pushButton_tracking_clicked();
 
 private:
     Ui::MainWindow *ui;
-    void loadJson(QString filepath);
     void loadIni(QString filepath);
     QString absoluteFilePath(QString currentPathOrFile, QString fileName);
-    QString absolutePath(QString currentPathOrFile, QString path);
     QStringList globalVideosList;
-    QString globalVideoPath;
+    QString globalVideoHome;
 };
 
 #endif // MAINWINDOW_H

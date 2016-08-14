@@ -8,11 +8,11 @@ trackingFactory_yzbx::trackingFactory_yzbx()
 Tracking_yzbx *trackingFactory_yzbx::getTrackingAlgorithm(QString trackingType)
 {
     if(trackingType.compare("UrbanTracker",Qt::CaseInsensitive)==0){
-        urbanTracker_tracking *t=new urbanTracker_tracking;
+        UrbanTracker_tracking *t=new UrbanTracker_tracking;
         return t;
     }
     else if(trackingType.compare("default",Qt::CaseInsensitive)==0){
-        urbanTracker_tracking *t=new urbanTracker_tracking;
+        UrbanTracker_tracking *t=new UrbanTracker_tracking;
         return t;
     }
     else{

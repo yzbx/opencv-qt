@@ -13,6 +13,9 @@ MainWindow::MainWindow(QWidget *parent) :
     trackingFactory_yzbx trackingFac;
     QStringList tlist=trackingFac.getTrackingTypeList();
     ui->comboBox_trackingType->addItems(tlist);
+
+    ui->lineEdit_inputPath->setReadOnly(true);
+    ui->lineEdit_inputPath->setEnabled(false);
 }
 
 MainWindow::~MainWindow()
@@ -22,147 +25,66 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_inputPath_clicked()
 {
-    //    QString fileName = QFileDialog::getOpenFileName(this,
-    //                                                    tr("Open bgs exe"), "",
-    //                                                    tr("bgs (*.exe)"));
+        QString fileName = QFileDialog::getOpenFileName(this,
+                                                        tr("Open config file"), "",
+                                                        tr("ini (*.ini)"));
 
-    QString fileName = QFileDialog::getExistingDirectory(this, tr("Open Input Directory"),
-                                                         ".",
-                                                         QFileDialog::ShowDirsOnly
-                                                         | QFileDialog::DontResolveSymlinks);
+//    QString fileName = QFileDialog::getExistingDirectory(this, tr("Open Input Directory"),
+//                                                         ".",
+//                                                         QFileDialog::ShowDirsOnly
+//                                                         | QFileDialog::DontResolveSymlinks);
     if(!fileName.isEmpty()){
         ui->lineEdit_inputPath->setText(fileName);
-        QString configFile=fileName+"/yzbx.ini";
 
-        QFileInfo finfo(configFile);
+        QFileInfo finfo(fileName);
         if(finfo.exists()){
-            loadIni(configFile);
+            loadIni(fileName);
         }
         else{
-            qDebug()<<"cannot find file "<<configFile;
+            qDebug()<<"cannot find file "<<fileName;
+            exit(-1);
         }
-    }
-}
 
-void MainWindow::on_pushButton_outputPath_clicked()
-{
-    QString fileName = QFileDialog::getExistingDirectory(this, tr("Open Input Directory"),
-                                                         ".",
-                                                         QFileDialog::ShowDirsOnly
-                                                         | QFileDialog::DontResolveSymlinks);
-    if(!fileName.isEmpty()){
-        ui->lineEdit_outputPath->setText(fileName);
-        QString configFile=fileName+"/yzbx.ini";
-
-        QFileInfo finfo(configFile);
-        if(finfo.exists()){
-            QSettings sett(configFile);
-            sett.setValue("defaultOutputPath",fileName);
-        }
-        else{
-            qDebug()<<"cannot find file "<<configFile;
-        }
     }
 }
 
 void MainWindow::on_pushButton_bgs_clicked()
 {
     cv::destroyAllWindows();
-    QString inputPath=ui->lineEdit_inputPath->text();
-    QString configFile=inputPath+"/yzbx.ini";
 
-    QFileInfo finfo(configFile);
-    if(finfo.exists()){
-        loadIni(configFile);
+    QString bgsType=ui->comboBox_bgsType->currentText();
+    bgsFactory_yzbx bgsFac;
+    QString videoFilePath=ui->comboBox_video->currentText();
+    if(videoFilePath.compare("all")!=0){
+        QString inputPath=globalVideoHome+"/"+videoFilePath;
+        bgsFac.process(bgsType,inputPath);
     }
     else{
-        qDebug()<<"cannot find file "<<configFile;
-        exit(-1);
-//        configFile=inputPath+"/yzbx.json";
-//        loadJson(configFile);
+        int n=globalVideosList.length();
+
+        for(int i=0;i<n;i++){
+            QString inputPath=globalVideoHome+"/"+globalVideosList.at(i);
+            bgsFac.process(bgsType,inputPath);
+        }
     }
 
-
-    //    QString bgsType=ui->comboBox_bgsType->currentText();
-    //    bgsFactory_yzbx bgsFac;
-    //    bgsFac.process(bgsType,inputPath);
-}
-
-void MainWindow::loadJson(QString filepath)
-{
-    QString filedata;
-    QFile file;
-    file.setFileName(filepath);
-    if (!file.open(QFile::ReadOnly | QFile::Text)) {
-        qDebug()<<"cannot open file "<<filepath;
-        exit(-1);
-    } else {
-        QTextStream in(&file);
-        filedata=in.readAll();
-        file.close();
-    }
-
-    bool ok;
-    QtJson::JsonObject result = QtJson::parse(filedata, ok).toMap();
-    if (!ok) {
-        qFatal("An error occurred during parsing");
-    }
-//    qDebug()<<"1"<<result["UrbanTracker"];
-//    QtJson::JsonObject configFilePath=result["UrbanTracker"].toMap();
-//    qDebug()<<"configFilePath="<<configFilePath["configFilePath"].toString();
-
-//    qDebug()<<"input videos path"<<result["input videos path"].toString();
-//    foreach(QVariant plugin, result["input videos"].toList()) {
-//        qDebug() << "  -" << plugin.toString();
-//    }
-//    qDebug()<<"default="<<result["defaultOutputPath"].toString();
-
-    globalVideoPath=result["input videos path"].toString();
-    globalVideoPath=absolutePath(filepath,globalVideoPath);
-
-//    QJsonDocument doc=QJsonDocument::fromJson(filedata.toUtf8());
-//    qDebug()<<"doc="<<doc;
-//    QJsonObject obj=doc.object();
-//    qDebug()<<"obj="<<obj;
-//    QJsonValue value=obj.value("UrbanTracker");
-//    qDebug()<<"value="<<value.toString();
-//    QJsonObject urbanTracker=value.toObject();
-//    QJsonValue configFilePath=urbanTracker.value("configFilePath");
-//    qDebug()<<"configFilePath="<<configFilePath.toString();
-
-//    qDebug()<<obj.value("UrbanTracker").toObject().value("configFilePath").toString();
 }
 
 void MainWindow::loadIni(QString filepath)
 {
-//    QSettings settings(filepath,QSettings::IniFormat);
     boost::property_tree::ptree pt;
     boost::property_tree::ini_parser::read_ini(filepath.toStdString(),pt);
-//    QString ut_configFilePath=settings.value("UrbanTracker/configFilePath").toString();
-//    qDebug()<<"abs test 1"<<absoluteFilePath(filepath,ut_configFilePath);
 
-//    QString defaultOutputPath=settings.value("defaultOutputPath").toString();
-//    QString inputVideosTxt=settings.value("inputVideosListTxt").toString();
-//    QString jsonFile=settings.value("ChineseConfigFile").toString();
-    QString defaultOutputPath=QString::fromStdString(pt.get<std::string>("defaultOutputPath"));
-    QString inputVideosTxt=QString::fromStdString(pt.get<std::string>("inputVideosListTxt"));
-    QString videosPath=QString::fromStdString(pt.get<std::string>("videosPath"));
-    qDebug()<<"abs test 2"<<absoluteFilePath(filepath,defaultOutputPath);
-    defaultOutputPath=absolutePath(filepath,defaultOutputPath);
-    qDebug()<<"abs test 3"<<defaultOutputPath;
-    qDebug()<<"boost test"<<videosPath;
-
-    inputVideosTxt=absoluteFilePath(filepath,inputVideosTxt);
-    videosPath=absoluteFilePath(filepath,videosPath);
-    globalVideoPath=videosPath;
-//    jsonFile=absoluteFilePath(filepath,jsonFile);
-//    loadJson(jsonFile);
+    QString VideoHome=QString::fromStdString(pt.get<std::string>("General.VideoHome"));
+    QString VideoTxt=QString::fromStdString(pt.get<std::string>("General.VideoTxt"));
+    VideoHome=absoluteFilePath(filepath,VideoHome);
+    VideoTxt=absoluteFilePath(filepath,VideoTxt);
 
     QString filedata;
     QFile file;
-    file.setFileName(inputVideosTxt);
+    file.setFileName(VideoTxt);
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
-        qDebug()<<"cannot open file "<<inputVideosTxt;
+        qDebug()<<"cannot open file "<<VideoTxt;
         exit(-1);
     } else {
         QTextStream in(&file);
@@ -171,17 +93,10 @@ void MainWindow::loadIni(QString filepath)
     }
     QStringList inputVideoList=filedata.split("\n");
     globalVideosList=inputVideoList;
+    globalVideoHome=VideoHome;
 
-    QString text=ui->lineEdit_outputPath->text();
-    if(text.isEmpty()){
-        ui->lineEdit_outputPath->setText(defaultOutputPath);
-    }
-    else{
-        pt.put("defaultOutputPath",ui->lineEdit_outputPath->text().toStdString());
-        boost::property_tree::ini_parser::write_ini(filepath.toStdString(),pt);
-//        settings.setValue("defaultOutputPath",ui->lineEdit_outputPath->text());
-//        settings.sync();
-    }
+    ui->comboBox_video->addItem("all");
+    ui->comboBox_video->addItems(globalVideosList);
 }
 
 QString MainWindow::absoluteFilePath(QString currentPathOrFile, QString fileName)
@@ -190,9 +105,10 @@ QString MainWindow::absoluteFilePath(QString currentPathOrFile, QString fileName
     QString currentPath=pinfo.absolutePath();
 
 
-    QFileInfo info(fileName);
+    QFileInfo info;
+    info.setFile(QDir(currentPath),fileName);
     if(info.isAbsolute()){
-        return fileName;
+        return info.absoluteFilePath();
     }
     else{
         if(info.isDir()){
@@ -200,66 +116,37 @@ QString MainWindow::absoluteFilePath(QString currentPathOrFile, QString fileName
             dir.cd(fileName);
             return dir.absolutePath();
         }
-        else{
+        else if(info.isFile()){
             QDir dir(currentPath);
             return dir.absoluteFilePath(fileName);
         }
-    }
-}
-
-QString MainWindow::absolutePath(QString currentPathOrFile, QString path)
-{
-    QFileInfo pinfo(currentPathOrFile);
-    QString currentPath=pinfo.absolutePath();
-
-    QFileInfo info(path);
-    if(info.isAbsolute()){
-        return path;
-    }
-    else{
-        QDir dir(currentPath);
-        dir.cd(path);
-        return dir.absolutePath();
+        else{
+            qDebug()<<"error in absoluteFilePath: "<<currentPathOrFile<<fileName;
+            return "error";
+        }
     }
 }
 
 void MainWindow::on_pushButton_tracking_clicked()
 {
-    QString bgsType=ui->comboBox_bgsType->currentText();
+    cv::destroyAllWindows();
     QString trackType=ui->comboBox_trackingType->currentText();
-    QString configFile=ui->lineEdit_inputPath->text()+"/yzbx.ini";
+    QString configFile=ui->lineEdit_inputPath->text();
+
 
     trackingFactory_yzbx trackerFac;
     Tracking_yzbx *tracker=trackerFac.getTrackingAlgorithm(trackType);
+    QString videoFilePath=ui->comboBox_video->currentText();
+    if(videoFilePath.compare("all")!=0){
+        QString inputPath=globalVideoHome+"/"+videoFilePath;
+        tracker->process(configFile,inputPath);
+    }
+    else{
+        int n=globalVideosList.length();
 
-    int n=globalVideosList.length();
-    QSettings sett(configFile,QSettings::IniFormat);
-    QString outputPath=sett.value("defaultOutputPath").toString();
-    QFileInfo info;
-    for(int i=0;i<n;i++){
-        QString videoFile=globalVideosList.at(i);
-        info.setFile(videoFile);
-        if(!info.isAbsolute()){
-            QDir dir(globalVideoPath);
-            videoFile=dir.absoluteFilePath(videoFile);
-            info.setFile(videoFile);
+        for(int i=0;i<n;i++){
+            QString inputPath=globalVideoHome+"/"+globalVideosList.at(i);
+            tracker->process(configFile,inputPath);
         }
-
-        QString sqlFile=info.baseName()+".sqlite";
-        sqlFile=outputPath+"/"+sqlFile;
-
-        //video not exist;
-        if(!info.exists()){
-            qDebug()<<videoFile<<" donot exist!";
-            continue;
-        }
-
-        info.setFile(sqlFile);
-        if(info.exists()){
-            qDebug()<<sqlFile<<" already exist!";
-            continue;
-        }
-
-        tracker->process(configFile,videoFile,bgsType);
     }
 }

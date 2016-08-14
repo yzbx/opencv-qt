@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>421</width>
-    <height>233</height>
+    <width>454</width>
+    <height>314</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,8 +19,8 @@
      <rect>
       <x>50</x>
       <y>10</y>
-      <width>320</width>
-      <height>161</height>
+      <width>361</width>
+      <height>221</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -29,7 +29,7 @@
        <item>
         <widget class="QLabel" name="label_3">
          <property name="text">
-          <string>input path</string>
+          <string>config file</string>
          </property>
         </widget>
        </item>
@@ -50,19 +50,12 @@
        <item>
         <widget class="QLabel" name="label_4">
          <property name="text">
-          <string>output path</string>
+          <string>input video </string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit_outputPath"/>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_outputPath">
-         <property name="text">
-          <string>browse</string>
-         </property>
-        </widget>
+        <widget class="QComboBox" name="comboBox_video"/>
        </item>
       </layout>
      </item>
@@ -137,7 +130,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>421</width>
+     <width>454</width>
      <height>22</height>
     </rect>
    </property>

@@ -42,8 +42,6 @@ unix: CONFIG += link_pkgconfig
 unix: PKGCONFIG += opencv bgslibrary
 
 LIBS += \
-    -lUrbanTrackerLib \
-    -lexternal \
     -lboost_system \
     -lboost_program_options \
     -lboost_filesystem \
